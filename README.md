@@ -42,3 +42,4 @@ A role-based task and performance management system built for streamlined team c
 
 ## 📂 Folder Structure
 
+work_sync/ ├── client/ # Frontend (React) │ ├── public/ │ └── src/ ├── server/ # Backend (Express) │ ├── models/ │ ├── routes/ │ ├── controllers/ │ └── middleware/ └──
