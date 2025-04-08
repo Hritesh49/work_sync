@@ -4,7 +4,6 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
     const { user } = useContext(AuthContext);
@@ -12,7 +11,10 @@ const AdminPanel = () => {
     const [newUser, setNewUser] = useState({ name: "", email: "", password: "", role: "", isAdmin: false });
     const [resetData, setResetData] = useState({ email: "", password: "" });
     const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate();
+
+    const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+    const isValidPassword = (password) =>
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
 
     // Fetch users on load
     useEffect(() => {
@@ -22,12 +24,26 @@ const AdminPanel = () => {
             .then(res => setUsers(res.data))
             .catch(err => {
                 console.error("Error fetching users:", err);
-                setUsers([]); // Ensure it's always an array
+                setUsers([]);
             });
     }, []);
 
     // Handle adding new user
     const handleAddUser = async () => {
+        const { name, email, password, role } = newUser;
+
+        if (!email || !password || !name || !role) {
+            alert("All fields are required");
+            return;
+        }
+        if (!isValidEmail(email)) {
+            alert("Invalid email format");
+            return;
+        }
+        if (!isValidPassword(password)) {
+            alert("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+            return;
+        }
         try {
             await axios.post("http://localhost:5000/api/auth/add-user", newUser, {
                 headers: { Authorization: `Bearer ${user.token}` }
@@ -42,12 +58,25 @@ const AdminPanel = () => {
 
     // Handle resetting password
     const handleResetPassword = async () => {
+        const { email, password } = resetData;
+        if (!email || !password) {
+            alert("Email and password are required");
+            return;
+        }
+        if (!isValidEmail(email)) {
+            alert("Invalid email format");
+            return;
+        }
+        if (!isValidPassword(password)) {
+            alert("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+            return;
+        }
         try {
             await axios.put("http://localhost:5000/api/auth/reset-password", resetData, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             alert("Password reset successfully!");
-            setResetData({ email: "", password: "" }); // Clear form
+            setResetData({ email: "", password: "" });
         } catch (error) {
             alert(error.response?.data?.msg || "Error resetting password");
         }

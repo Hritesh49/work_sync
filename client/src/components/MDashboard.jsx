@@ -5,7 +5,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
-import Sidebar from "./Sidebar";
 import Analytics from "./PerformanceAnalytics";
 import Leaderboard from "./Leaderboard";
 
@@ -99,6 +98,31 @@ const ManagerDashboard = () => {
                         <Typography variant="h4">Welcome, {user?.name}!</Typography>
                         <Typography variant="h6">Role: {user?.role}</Typography>
 
+                        {/* Assign Task Form */}
+                        <Typography variant="h6" gutterBottom>Assign Task</Typography>
+                        <TextField label="Task Title" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} fullWidth margin="normal" />
+                        <TextField label="Task Description" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} fullWidth margin="normal" />
+
+                        <Autocomplete
+                            options={employees}
+                            getOptionLabel={(emp) => emp.name}
+                            value={employees.find(emp => emp._id === newTask.assignedTo) || null}
+                            onChange={(event, newValue) => setNewTask({ ...newTask, assignedTo: newValue?._id || "" })}
+                            renderInput={(params) => <TextField {...params} label="Assign To" fullWidth />}
+                        />
+
+                        <TextField
+                            label="Due Date"
+                            type="date"
+                            value={newTask.dueDate}
+                            onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                            fullWidth
+                            margin="normal"
+                            InputLabelProps={{ shrink: true }}
+                        />
+
+                        <Button onClick={handleAssignTask} variant="contained" color="primary">Assign Task</Button>
+
                         {/* Task Filters */}
                         <Typography variant="h6">Filter Tasks</Typography>
                         <FormControl fullWidth>
@@ -131,31 +155,6 @@ const ManagerDashboard = () => {
                             fullWidth
                             InputLabelProps={{ shrink: true }}
                         />
-
-                        {/* Assign Task Form */}
-                        <Typography variant="h6" gutterBottom>Assign Task</Typography>
-                        <TextField label="Task Title" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} fullWidth margin="normal" />
-                        <TextField label="Task Description" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} fullWidth margin="normal" />
-
-                        <Autocomplete
-                            options={employees}
-                            getOptionLabel={(emp) => emp.name}
-                            value={employees.find(emp => emp._id === newTask.assignedTo) || null}
-                            onChange={(event, newValue) => setNewTask({ ...newTask, assignedTo: newValue?._id || "" })}
-                            renderInput={(params) => <TextField {...params} label="Assign To" fullWidth />}
-                        />
-
-                        <TextField
-                            label="Due Date"
-                            type="date"
-                            value={newTask.dueDate}
-                            onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                            fullWidth
-                            margin="normal"
-                            InputLabelProps={{ shrink: true }}
-                        />
-
-                        <Button onClick={handleAssignTask} variant="contained" color="primary">Assign Task</Button>
 
                         {/* Task List */}
                         <Typography variant="h6" gutterBottom>Assigned Tasks</Typography>

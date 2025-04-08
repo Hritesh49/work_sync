@@ -25,31 +25,28 @@ const Login = () => {
             alert('Invalid email format');
             return;
         }
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            alert('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.');
+            return;
+        }
 
         try {
-            // console.log("🔄 Sending login request with:", { email, password });
-
             const res = await axios.post(
                 "http://localhost:5000/api/auth/login",
                 { email, password },
                 { headers: { "Content-Type": "application/json" } }
             );
-
-            // console.log("✅ Login successful:", res.data);
-
             setUser(res.data);
-            localStorage.setItem("user", JSON.stringify(res.data));  // ✅ Store full user data
-
-            // console.log("📦 Stored user in localStorage:", JSON.parse(localStorage.getItem("user")));
+            localStorage.setItem("user", JSON.stringify(res.data));
             if (res.data.isAdmin && res.data.role) {
-                navigate(`/${res.data.role.toLowerCase()}-dashboard`);  // Default to admin panel
+                navigate(`/${res.data.role.toLowerCase()}-dashboard`);
             } else if (res.data.role === "employee") {
                 navigate("/employee-dashboard");
             } else if (res.data.role === "manager") {
                 navigate("/manager-dashboard");
             }
         } catch (err) {
-            // console.error("❌ Login failed:", err.response?.data || err.message);
             alert('Login failed. Please try again.');
         }
     };
