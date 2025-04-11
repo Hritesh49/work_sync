@@ -17,9 +17,15 @@ const Navbar = () => {
     };
 
     const handleSwitchView = () => {
-        const newPath = isAdminView ? `/${user.role.toLowerCase()}-dashboard` : "/admin";
+        if (!user) return;
+
+        const newPath = isAdminView
+            ? `/${user.role.toLowerCase()}-dashboard`
+            : (user.isAdmin ? "/admin" : `/${user.role.toLowerCase()}-dashboard`);
+
         navigate(newPath);
     };
+
 
     return (
         <AppBar position="static">

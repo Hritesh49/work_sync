@@ -19,7 +19,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route element={<Layout />}>
-                        <Route path="/admin" element={<ProtectedRoute requiredRole="manager"><AdminPanel /></ProtectedRoute>} />
+                        <Route path="/admin" element={<ProtectedRoute requiredRole={["manager", "employee"]}><AdminPanel /></ProtectedRoute>} />
                         <Route path="/employee-dashboard" element={<ProtectedRoute requiredRole="employee"><EmployeeDashboard /></ProtectedRoute>} />
                         <Route element={<ProtectedRoute requiredRole="manager"><ManagerLayout /></ProtectedRoute>}>
                             <Route path="/manager-dashboard" element={<ManagerDashboard />} />

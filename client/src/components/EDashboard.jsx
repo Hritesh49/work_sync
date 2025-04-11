@@ -1,15 +1,18 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
     Container, Typography, Select, MenuItem, FormControl,
-    InputLabel, Card, CardContent, Grid
+    InputLabel, Card, CardContent, Grid, Box
 } from "@mui/material";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
+import Analytics from "./PerformanceAnalytics";
+import Leaderboard from "./Leaderboard";
 
 const EmployeeDashboard = () => {
     const { user } = useContext(AuthContext);
     const [tasks, setTasks] = useState([]);
     const [filters, setFilters] = useState({ status: "" });
+    const [view, setView] = useState("dashboard");
 
     useEffect(() => {
         if (!user || !user.email) return;
