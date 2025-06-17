@@ -177,7 +177,7 @@ const AdminPanel = () => {
                 fullWidth required margin="normal"
             />
             <TextField
-                label="New Password"
+                label="New Password "
                 type={showPassword ? 'text' : 'password'}
                 value={resetData.password}
                 onChange={(e) => setResetData({ ...resetData, password: e.target.value })}
