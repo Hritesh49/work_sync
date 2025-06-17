@@ -2,13 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import { Container, Typography } from "@mui/material";
-
+import API from "../api";
 const Analytics = () => {
     const { user } = useContext(AuthContext);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/api/analytics", {
+        API.get("/api/analytics", {
             headers: { Authorization: `Bearer ${user.token}` }
         })
         .then(response => setData(response.data))

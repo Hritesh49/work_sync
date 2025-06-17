@@ -5,6 +5,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
+import API from "../api";
 
 
 const EmployeeDashboard = () => {
@@ -17,7 +18,7 @@ const EmployeeDashboard = () => {
 
         const fetchTasks = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/task/employee-tasks/${user.email}`, {
+                const res = await API.get(`/api/task/employee-tasks/${user.email}`, {
                     headers: { Authorization: `Bearer ${user.token}` },
                 });
 
@@ -39,8 +40,8 @@ const EmployeeDashboard = () => {
     // Update Task Status Without Page Refresh
     const handleUpdateStatus = async (taskId, status) => {
         try {
-            const response = await axios.put(
-                `http://localhost:5000/api/task/update/${taskId}`,
+            const response = await API.put(
+                `/api/task/update/${taskId}`,
                 { status },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );

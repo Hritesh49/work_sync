@@ -5,7 +5,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
-
+import API from "../api";
 const Login = () => {
     const [email, setEmail] = useState("test@gmail.com");
     const [password, setPassword] = useState("Test@123");
@@ -32,8 +32,8 @@ const Login = () => {
         }
 
         try {
-            const res = await axios.post(
-                "http://localhost:5000/api/auth/login",
+            const res = await API.post(
+                "/api/auth/login",
                 { email, password },
                 { headers: { "Content-Type": "application/json" } }
             );

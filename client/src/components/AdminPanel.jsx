@@ -4,6 +4,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
+import API from "../api";
 
 const AdminPanel = () => {
     const { user } = useContext(AuthContext);
@@ -18,7 +19,7 @@ const AdminPanel = () => {
 
     // Fetch users on load
     useEffect(() => {
-        axios.get("http://localhost:5000/api/auth/users", {
+        API.get("/api/auth/users", {
             headers: { Authorization: `Bearer ${user.token}` }
         })
             .then(res => setUsers(res.data))
@@ -45,7 +46,7 @@ const AdminPanel = () => {
             return;
         }
         try {
-            await axios.post("http://localhost:5000/api/auth/add-user", newUser, {
+            await API.post("/api/auth/add-user", newUser, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             alert("User added successfully!");
@@ -72,7 +73,7 @@ const AdminPanel = () => {
             return;
         }
         try {
-            await axios.put("http://localhost:5000/api/auth/reset-password", resetData, {
+            await API.put("/api/auth/reset-password", resetData, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             alert("Password reset successfully!");
@@ -153,7 +154,7 @@ const AdminPanel = () => {
                     value={newUser.role}
                     onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
                 >
-                    <MenuItem value="eanager">Manager</MenuItem>
+                    <MenuItem value="manager">Manager</MenuItem>
                     <MenuItem value="employee">Employee</MenuItem>
                 </Select>
             </FormControl>

@@ -2,13 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import { Container, Typography, Table, TableBody, TableCell, TableRow, TableHead } from "@mui/material";
-
+import API from "../api";
 const Leaderboard = () => {
     const { user } = useContext(AuthContext);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/api/leaderboard", {
+        API.get("/api/leaderboard", {
             headers: { Authorization: `Bearer ${user.token}` }
         })
             .then(response => setData(response.data))

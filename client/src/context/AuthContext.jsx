@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-
+import API from "../api";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         console.log("🚀 login() function called with:", email, password);
         try {
-            const { data } = await axios.post("http://localhost:5000/api/auth/login", { email, password }, {
+            const { data } = await API.post("/api/auth/login", { email, password }, {
                 headers: { "Content-Type": "application/json" }
             });
             // console.log("✅ Response received from backend:", data);

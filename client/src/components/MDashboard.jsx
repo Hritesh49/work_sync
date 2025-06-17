@@ -9,7 +9,7 @@ import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import Analytics from "./PerformanceAnalytics";
 import Leaderboard from "./Leaderboard";
-
+import API from "../api";
 const statusColors = {
     completed: 'lightgreen',
     pending: 'lightyellow',
@@ -42,13 +42,13 @@ const ManagerDashboard = () => {
                 setLoading(true);
 
                 // Fetch Tasks
-                const taskRes = await axios.get("http://localhost:5000/api/task/manager-tasks", {
+                const taskRes = await API.get("/api/task/manager-tasks", {
                     headers: { Authorization: `Bearer ${user.token}` },
                     params: filters,
                 });
 
                 // Fetch Employees
-                const employeeRes = await axios.get("http://localhost:5000/api/auth/users", {
+                const employeeRes = await API.get("/api/auth/users", {
                     headers: { Authorization: `Bearer ${user.token}` },
                 });
 
@@ -74,7 +74,7 @@ const ManagerDashboard = () => {
         }
 
         try {
-            const res = await axios.post("http://localhost:5000/api/task/assign", newTask, {
+            const res = await API.post("/api/task/assign", newTask, {
                 headers: { Authorization: `Bearer ${user?.token}` },
             });
 
@@ -92,7 +92,7 @@ const ManagerDashboard = () => {
 
     const handleDeleteTask = async (taskId) => {
         try {
-            await axios.delete(`http://localhost:5000/api/task/delete/${taskId}`, {
+            await API.delete(`/api/task/delete/${taskId}`, {
                 headers: { Authorization: `Bearer ${user?.token}` },
             });
 
@@ -109,7 +109,7 @@ const ManagerDashboard = () => {
         }
     
         try {
-            await axios.patch(`http://localhost:5000/api/task/change-request/${selectedTaskId}`, {
+            await API.patch(`/api/task/change-request/${selectedTaskId}`, {
                 message: changeComment
             }, {
                 headers: { Authorization: `Bearer ${user?.token}` }
