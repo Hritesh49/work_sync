@@ -1,12 +1,20 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
     Box, Container, Typography, Button, TextField, Select, MenuItem,
-    FormControl, InputLabel, Autocomplete, Card, CardContent, CardActions
+    FormControl, InputLabel, Autocomplete, Card, CardContent, CardActions,
+    Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress
 } from "@mui/material";
+import { Edit, Delete } from '@mui/icons-material';
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import Analytics from "./PerformanceAnalytics";
 import Leaderboard from "./Leaderboard";
+
+const statusColors = {
+    completed: 'lightgreen',
+    pending: 'lightyellow',
+    overdue: '#ff9999'
+  };
 
 const ManagerDashboard = () => {
     const { user } = useContext(AuthContext);
@@ -21,6 +29,10 @@ const ManagerDashboard = () => {
         dueDate: "",
     });
     const [filters, setFilters] = useState({ status: "", assignedTo: "", dueDate: "" });
+    const [openChangeDialog, setOpenChangeDialog] = useState(false);
+    const [selectedTaskId, setSelectedTaskId] = useState(null);
+    const [changeComment, setChangeComment] = useState("");
+
 
     useEffect(() => {
         if (!user?.token) return;
@@ -89,6 +101,33 @@ const ManagerDashboard = () => {
             console.error("Error deleting task:", err.response?.data || err.message);
         }
     };
+
+    const handleSubmitChangeRequest = async () => {
+        if (!changeComment) {
+            alert("Please provide a change request comment.");
+            return;
+        }
+    
+        try {
+            await axios.patch(`http://localhost:5000/api/task/change-request/${selectedTaskId}`, {
+                message: changeComment
+            }, {
+                headers: { Authorization: `Bearer ${user?.token}` }
+            });
+    
+            setTasks(tasks.map(task =>
+                task._id === selectedTaskId
+                    ? { ...task, status: "In Progress", changeRequest: { requested: true, message: changeComment } }
+                    : task
+            ));
+    
+            setOpenChangeDialog(false);
+            setChangeComment("");
+        } catch (err) {
+            console.error("Error submitting change request:", err.response?.data || err.message);
+        }
+    };
+    
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -164,13 +203,27 @@ const ManagerDashboard = () => {
                             <Typography>No tasks assigned yet</Typography>
                         ) : (
                             tasks.map((task) => (
-                                <Card key={task._id} sx={{ marginTop: 2 }}>
+                                <Card key={task._id} sx={{ marginTop: 2, backgroundColor: statusColors[task.status.toLowerCase()] }}>
                                     <CardContent>
                                         <Typography variant="h6">{task.title} - {task.status}</Typography>
                                         <Typography variant="body2">Assigned to: {task.assignedTo?.name || "Unknown"}</Typography>
+                                        {task.status === "Completed" || "In Progress" && (<Typography variant="body2">Chnages Requested: {task.changeRequest.message || "Unknown"}</Typography>)}
                                     </CardContent>
                                     <CardActions>
                                         <Button onClick={() => handleDeleteTask(task._id)} variant="contained" color="error">Delete</Button>
+                                        {task.status === "Completed" && (
+                                            <Button
+                                                onClick={() => {
+                                                    setSelectedTaskId(task._id);
+                                                    setOpenChangeDialog(true);
+                                                }}
+                                                variant="contained"
+                                                color="warning"
+                                            >
+                                                Request Change
+                                            </Button>
+                                        )}
+
                                     </CardActions>
                                 </Card>
                             ))
@@ -179,6 +232,27 @@ const ManagerDashboard = () => {
                 )}
                 {view === "analytics" && <Analytics />}
                 {view === "leaderboard" && <Leaderboard />}
+                {/* Change Request Dialog */}
+                <Dialog open={openChangeDialog} onClose={() => setOpenChangeDialog(false)}>
+                    <DialogTitle>Request Changes</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            label="Comment"
+                            multiline
+                            rows={4}
+                            fullWidth
+                            value={changeComment}
+                            onChange={(e) => setChangeComment(e.target.value)}
+                            placeholder="Describe the changes required..."
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenChangeDialog(false)}>Cancel</Button>
+                        <Button variant="contained" onClick={handleSubmitChangeRequest}>
+                            Submit
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Container>
         </Box>
     );

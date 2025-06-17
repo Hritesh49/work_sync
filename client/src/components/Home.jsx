@@ -11,7 +11,7 @@ const Home = () => {
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        NeoHRMS
+                        WorkSync
                     </Typography>
                     <Button color="inherit" onClick={() => navigate("/login")}>
                         Login
@@ -23,20 +23,20 @@ const Home = () => {
             <Container maxWidth="md" sx={{ mt: 5 }}>
                 <Paper elevation={3} sx={{ p: 4, textAlign: "center" }}>
                     <Typography variant="h4" gutterBottom>
-                        Welcome to NeoHRMS
+                        Welcome to WorkSync
                     </Typography>
                     <Typography variant="body1">
-                        NeoHRMS is a powerful HR management system that integrates task management, learning, performance tracking, and rewards features, inspired by Notion. 
+                        WorkSync is a powerful HR management system that integrates task management, learning, performance tracking, and rewards features, inspired by Notion. 
                         Our goal is to simplify HR processes and enhance employee experience.
                     </Typography>
 
                     <Box mt={3}>
-                        <Typography variant="h6">🚀 Features:</Typography>
+                        <Typography variant="h6"> Features:</Typography>
                         <ul style={{ textAlign: "left", paddingLeft: "20px" }}>
-                            <li>📋 Task & Project Management</li>
-                            <li>📚 Learning & Development Modules</li>
-                            <li>📊 Performance Tracking & Analytics</li>
-                            <li>🏆 Employee Recognition & Rewards</li>
+                            <li> Task & Project Management</li>
+                            <li> Learning & Development Modules</li>
+                            <li> Performance Tracking & Analytics</li>
+                            <li> Employee Recognition & Rewards</li>
                         </ul>
                     </Box>
 

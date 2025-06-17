@@ -128,5 +128,39 @@ router.get("/employee-tasks/:email", authMiddleware, async (req, res) => {
     }
 });
 
+// Change Request Endpoint (PATCH)
+router.patch("/change-request/:taskId", authMiddleware, async (req, res) => {
+    console.log("Received PATCH request at /task/change-request/", req.params.taskId);
+    const { taskId } = req.params;
+    const { message } = req.body;
+  
+    if (!message) {
+      return res.status(400).json({ message: "Change request message is required." });
+    }
+  
+    try {
+      const task = await Task.findById(taskId);
+  
+      if (!task) return res.status(404).json({ message: "Task not found" });
+  
+      if (task.status !== "Completed") {
+        return res.status(400).json({ message: "Change requests can only be made for completed tasks." });
+      }
+  
+      task.changeRequest = {
+        requested: true,
+        message,
+        requestedAt: new Date(),
+      };
+  
+      task.status = "In Progress"; // Optional: reopen the task for edits
+      await task.save();
+  
+      res.status(200).json({ message: "Change request submitted", task });
+    } catch (err) {
+      console.error("Error in change request:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
 module.exports = router;

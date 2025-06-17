@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { TextField, Button, IconButton, InputAdornment, Container, Typography } from '@mui/material';
+import { TextField, Button, IconButton, InputAdornment, Container, Typography, Stack } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
@@ -7,8 +7,8 @@ import AuthContext from "../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("test@gmail.com");
+    const [password, setPassword] = useState("Test@123");
     const { setUser } = useContext(AuthContext);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
@@ -53,42 +53,44 @@ const Login = () => {
 
 
     return (
-        <Container>
-            <Typography variant="h4">Login</Typography>
-            <form onSubmit={handleLogin}>
-                <TextField
-                    label="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    fullWidth
-                    required
-                    margin="normal"
-                />
-                <TextField
-                    label="Password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    fullWidth
-                    required
-                    margin="normal"
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    edge="end"
-                                >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                    Login
-                </Button>
-            </form>
+        <Container sx={{ width: "40%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Stack sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: 'center' }}>
+                <Typography variant="h4" sx={{width:'100%',fontWeight:'900',textShadow:'1px 1px 8px rgba(0, 0, 0, 0.33)', color:"Background",}}>Login</Typography>
+                <form onSubmit={handleLogin}>
+                    <TextField
+                        label="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        fullWidth
+                        required
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Password"
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        fullWidth
+                        required
+                        margin="normal"
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <Button type="submit" variant="contained" color="primary" fullWidth>
+                        Login
+                    </Button>
+                </form>
+            </Stack>
         </Container>
     );
 };

@@ -1,42 +1,40 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
     Container, Typography, Select, MenuItem, FormControl,
-    InputLabel, Card, CardContent, Grid, Box
+    InputLabel, Card, CardContent, Grid, Checkbox
 } from "@mui/material";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
-import Analytics from "./PerformanceAnalytics";
-import Leaderboard from "./Leaderboard";
+
 
 const EmployeeDashboard = () => {
     const { user } = useContext(AuthContext);
     const [tasks, setTasks] = useState([]);
     const [filters, setFilters] = useState({ status: "" });
-    const [view, setView] = useState("dashboard");
 
     useEffect(() => {
         if (!user || !user.email) return;
-    
+
         const fetchTasks = async () => {
             try {
                 const res = await axios.get(`http://localhost:5000/api/task/employee-tasks/${user.email}`, {
                     headers: { Authorization: `Bearer ${user.token}` },
                 });
-    
+
                 // Apply client-side filtering if the status is selected
                 const filteredTasks = filters.status
                     ? res.data.filter(task => task.status === filters.status)
                     : res.data;
-    
+
                 setTasks(filteredTasks);
             } catch (err) {
                 console.error("Error fetching tasks:", err);
             }
         };
-    
+
         fetchTasks();
     }, [user, filters]);
-    
+
 
     // Update Task Status Without Page Refresh
     const handleUpdateStatus = async (taskId, status) => {
@@ -44,7 +42,7 @@ const EmployeeDashboard = () => {
             const response = await axios.put(
                 `http://localhost:5000/api/task/update/${taskId}`,
                 { status },
-                { headers: { Authorization: `Bearer ${user.token}` }}
+                { headers: { Authorization: `Bearer ${user.token}` } }
             );
 
             // Update tasks state instead of full page reload
@@ -55,6 +53,14 @@ const EmployeeDashboard = () => {
             );
         } catch (error) {
             console.error("Error updating task status:", error);
+        }
+    };
+
+    const handleCheckboxClick = async (taskId) => {
+        try {
+            await handleUpdateStatus(taskId, "Completed");
+        } catch (error) {
+            console.error("Error handling checkbox status:", error);
         }
     };
 
@@ -96,6 +102,17 @@ const EmployeeDashboard = () => {
                                     <Typography variant="body2">
                                         Due Date: {new Date(task.dueDate).toLocaleDateString()}
                                     </Typography>
+                                    <div>
+                                        {task.changeRequest && task.changeRequest.message && (
+                                            <Typography variant="body2">
+                                                Changes Required: {task.changeRequest.message}
+                                            </Typography>
+                                        )}
+                                        <Checkbox
+                                            checked={task.status === "Completed"}
+                                            onClick={() => handleCheckboxClick(task._id)}
+                                        />
+                                    </div>
 
                                     {/* Status Update Dropdown */}
                                     <FormControl fullWidth sx={{ mt: 2 }}>
