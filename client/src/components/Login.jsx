@@ -32,6 +32,9 @@ const Login = () => {
         }
 
         try {
+            console.log("🔎 API BASE:", import.meta.env.VITE_API_BASE);
+            console.log("📡 Full URL:", API.defaults.baseURL + "/api/auth/login");
+
             const res = await API.post(
                 "/api/auth/login",
                 { email, password },
@@ -55,7 +58,7 @@ const Login = () => {
     return (
         <Container sx={{ width: "40%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Stack sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: 'center' }}>
-                <Typography variant="h4" sx={{width:'100%',fontWeight:'900',textShadow:'1px 1px 8px rgba(0, 0, 0, 0.33)', color:"Background",}}>Login</Typography>
+                <Typography variant="h4" sx={{ width: '100%', fontWeight: '900', textShadow: '1px 1px 8px rgba(0, 0, 0, 0.33)', color: "Background", }}>Login</Typography>
                 <form onSubmit={handleLogin}>
                     <TextField
                         label="Email"
