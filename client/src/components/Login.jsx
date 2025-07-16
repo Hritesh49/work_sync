@@ -32,9 +32,6 @@ const Login = () => {
         }
 
         try {
-            console.log("🔎 API BASE:", import.meta.env.VITE_API_BASE);
-            console.log("📡 Full URL:", API.defaults.baseURL + "/api/auth/login");
-
             const res = await API.post(
                 "/api/auth/login",
                 { email, password },

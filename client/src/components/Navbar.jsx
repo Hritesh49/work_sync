@@ -31,8 +31,11 @@ const Navbar = () => {
         <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6" sx={{ flexGrow: 1, cursor: "pointer" }} onClick={() => navigate("/")}>
-                    NeoHRMS
+                    WorkSync
                 </Typography>
+                <Button color="inherit" onClick={() => navigate("/login")}>
+                    Login
+                </Button>
 
                 {user && (
                     <Box>

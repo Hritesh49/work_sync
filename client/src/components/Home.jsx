@@ -1,6 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Button, Container, Box, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -8,16 +9,7 @@ const Home = () => {
     return (
         <>
             {/* Navbar */}
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        WorkSync
-                    </Typography>
-                    <Button color="inherit" onClick={() => navigate("/login")}>
-                        Login
-                    </Button>
-                </Toolbar>
-            </AppBar>
+            <Navbar />
 
             {/* Main Content */}
             <Container maxWidth="md" sx={{ mt: 5 }}>
