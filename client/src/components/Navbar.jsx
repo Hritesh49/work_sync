@@ -8,7 +8,7 @@ const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const isAdminView = location.pathname === "/admin"; // Dynamically derive it
+    const isAdminView = location.pathname === "/admin";
 
     const handleLogout = () => {
         setUser(null);
